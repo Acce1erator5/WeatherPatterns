@@ -1,21 +1,40 @@
 package uz.ttpu.weatherpatterns.mvi.view
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import uz.ttpu.weatherpatterns.R
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.viewModels
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import uz.ttpu.weatherpatterns.di.WeatherModule
+import uz.ttpu.weatherpatterns.mvi.model.WeatherIntent
+import uz.ttpu.weatherpatterns.mvi.model.WeatherState
+import uz.ttpu.weatherpatterns.mvi.viewmodel.WeatherMviViewModel
+import uz.ttpu.weatherpatterns.ui.WeatherScreen
 
-class MviActivity : AppCompatActivity() {
+class MviActivity : ComponentActivity() {
+    private val viewModel: WeatherMviViewModel by viewModels { WeatherModule.weatherMviViewModelFactory }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_mvi)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        setContent {
+            MaterialTheme {
+                val state by viewModel.state.collectAsStateWithLifecycle()
+                WeatherScreen(
+                    status = state.toStatusText(),
+                    onCitySelected = { city ->
+                        viewModel.onIntent(WeatherIntent.SelectCity(city))
+                    },
+                )
+            }
         }
     }
+}
+
+fun WeatherState.toStatusText(): String = when {
+    isLoading -> "Loading…"
+    error != null -> "Error: $error"
+    weather != null -> "${weather.city}: ${weather.temperatureC}°C, ${weather.condition}"
+    else -> "Pick a city"
 }
