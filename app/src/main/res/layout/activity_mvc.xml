@@ -5,6 +5,6 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".mvc.viev.MvcActivity">
+    tools:context=".mvc.view.MvcActivity">
 
 </androidx.constraintlayout.widget.ConstraintLayout>

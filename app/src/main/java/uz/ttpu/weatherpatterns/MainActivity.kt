@@ -12,7 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import uz.ttpu.weatherpatterns.mvc.viev.MvcActivity
+import uz.ttpu.weatherpatterns.mvc.view.MvcActivity
 import uz.ttpu.weatherpatterns.mvi.view.MviActivity
 import uz.ttpu.weatherpatterns.mvp.view.MvpActivity
 import uz.ttpu.weatherpatterns.mvvm.view.MvvmActivity
